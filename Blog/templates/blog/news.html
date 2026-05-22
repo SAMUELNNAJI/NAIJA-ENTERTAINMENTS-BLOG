@@ -1,0 +1,78 @@
+
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+    
+<div class="search-container">
+  <form action="{% url 'search_news' %}" method="get" class="search-form">
+    <div class="search-wrapper">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input 
+        type="text" 
+        name="search_news" 
+        class="search-input" 
+        placeholder="Search for news, tags...."
+        autocomplete="off"
+        value="{{ query|default:'' }}"
+      >
+      <button type="submit" class="search-btn">
+        <span>Search</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
+    
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Latest <span>News</span></h2>
+
+    <div class="grid">
+      {% for article in news %}
+        <a href="{% url 'news_details' article.pk %}" class="card-link">
+          <div class="card">
+            {% if article.image %}
+              <img src="{{ article.image.url }}" alt="{{ article.title }}">
+            {% else %}
+              <img src="{% static 'images/default-news.jpg' %}" alt="Default news image">
+            {% endif %}
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.description|striptags|truncatewords:30 }}</p>
+            <span class="tag">{{ article.news_tags.all|join:", " }}</span>
+          </div>
+        </a>
+      {% empty %}
+        <p>No news items found.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+  
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">TOP TRENDING <span>News</span></h2>
+
+    <div class="grid">
+      <a href="{% url 'news_details' article.pk %}">
+        {% if article %}
+            <div class="card">
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" style="height: 300px;">
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.description|striptags|truncatewords:50}}</p>
+                <span class="tag">{{ article.news_tags.all|join:", " }}</span>
+            </div>
+           
+        {% endif %}
+      </a>
+    </div>
+
+</div>
+</section>
+
+{% endblock %}

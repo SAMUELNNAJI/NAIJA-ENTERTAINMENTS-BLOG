@@ -1,0 +1,123 @@
+{% extends 'blog/base.html' %}
+{%block content%}
+<section class="section">
+  <div class="search-container">
+    <form action="{% url 'search_music' %}" method="get" class="search-form">
+      {% csrf_token %}
+      <div class="search-wrapper">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          name="search" 
+          class="search-input" 
+          placeholder="Search for music, artists, albums..." 
+          autocomplete="off"
+        >
+        <button type="submit" class="search-btn">
+          <span>Search</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="container">
+    <h2 class="section-title">Latest <span>Music</span></h2>
+
+    <div class="grid">
+      {% for music in page_obj %}
+      <a href="{% url 'music_details' music.pk %}" class="card-link">
+    <div class="card">
+      <!-- Use {{ music }} variables, not static text -->
+      <img src="{{music.cover_image.url}}" alt="{{ music.title }}">
+      <h3>{{ music.title }}</h3>
+      <p>{{ music.artist}}</p>
+      <span class="tag">{{ music.genre}}</span>
+    </div>
+    </a>
+{% endfor %}
+    </div>
+
+    <div class="pagination">
+      <div class="page-buttons">
+        {% if page_obj.has_previous %}
+          <a href="?page=1" class="page-btn edge">« First</a>
+          <a href="?page={{ page_obj.previous_page_number }}" class="page-btn edge">‹ Prev</a>
+        {% else %}
+          <span class="page-btn edge disabled">«First</span>
+          <span class="page-btn edge disabled">‹Prev</span>
+        {% endif %}
+    
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <span class="page-btn active">{{ num }}</span>
+          {% elif num == 1 or num == page_obj.paginator.num_pages %}
+            <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+          {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+            <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+          {% elif num == page_obj.number|add:'-2' or num == page_obj.number|add:'2' %}
+            <span class="page-btn dots">...</span>
+          {% endif %}
+        {% endfor %}
+    
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}" class="page-btn edge">Next ›</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}" class="page-btn edge">Last »</a>
+        {% else %}
+          <span class="page-btn edge disabled">Next›</span>
+          <span class="page-btn edge disabled">Last»</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Song Of The <span>Week</span></h2>
+    <div class="grid">
+      
+      {% if song_of_the_week %}
+        <a href="{% url 'music_details' song_of_the_week.pk %}" class="card-link">
+        <div class="card">
+          <img src="{{ song_of_the_week.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ music.title }}" style="height: 400px;">
+          <h3>{{ song_of_the_week.title }}</h3>
+          <p>{{ song_of_the_week.artist|default:"Unknown Artist" }}</p>
+          <span class="tag">{{ song_of_the_week.genre|default:"Uncategorized" }}</span>
+        </div>
+      </a>
+       {% else %}
+        <p>No song of the week selected.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2 class="section-title">Gospel <span>Music</span></h2>
+    <div class="grid" style="margin-bottom: 10px;">
+      {% for gospel in gospel_music %}
+      <a href="{% url 'music_details' gospel.pk %}" class="card-link">
+    <div class="card">
+        <img src="{{ gospel.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ gospel.title }}">
+        <h3>{{ gospel.title }}</h3>
+        <p>{{ gospel.artist|default:"Unknown Artist" }}</p>
+        <span class="tag">{{ gospel.genre|default:"Uncategorized" }}</span>
+    </div>
+      {% empty %}
+        <p>No gospel music available.</p>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+    
+</section>
+{%endblock%}

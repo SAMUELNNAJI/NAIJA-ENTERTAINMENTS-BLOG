@@ -1,0 +1,130 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NAIJA ENTERTAINMENT{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header>
+  <div class="container navbar">
+    <a href="{% url 'home_page' %}" class="logo-link">
+      <div class="logo">NAIJA 
+          <span>ENTERTAINMENT</span>
+      </div>
+    </a>
+
+    <nav class="nav-links">
+      <a href="{% url 'home_page' %}">🏚️ HOME</a>
+      <a href="{% url 'music_page' %}">🎧 MUSIC</a>
+      <a href="{% url 'movie_page' %}">📺 VIDEOS</a>
+      <a href="{% url 'news_page' %}">📰 NEWS</a>
+      <a href="{% url 'instrumentals_page' %}">🎹 INSTREMETALS</a>
+    </nav>
+
+    
+    
+      
+    
+  </div>
+</header>
+
+{%block content%}
+
+{% endblock %}
+
+<footer>
+  <p>© 2026 Naija Entertainment Home | All Rights Reserved</p>
+</footer>
+<script>
+    // Image data - add your images here
+    const images = [
+      {
+        src: "https://pbs.twimg.com/media/Gz3Uy7VWEAAE2lE.jpg",
+        title: "Midnight Sessions",
+        desc: "Live Recording 2021"
+      },
+      {
+        src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0RjyYOl_phDUaB4qYrOa2Mt16clpwvHsEbA&s",
+        title: "Neon Dreams",
+        desc: "Studio Album"
+      },
+      {
+        src: "https://cdn-p.smehost.net/sites/5cfaf3980b294dd89a79248f35560b2f/wp-content/uploads/2021/12/profile.jpg",
+        title: "Electric Soul",
+        desc: "Remix Collection"
+      },
+      {
+        src: "https://www.billboard.com/wp-content/uploads/2024/06/Rema-cr-Ricky-Alvarez-press-2024-billboard-1548.jpg",
+        title: "Asake",
+        desc: "Acoustic Set"
+      }
+    ];
+
+    const card = document.getElementById('heroCard');
+    const progressBar = document.getElementById('progressBar');
+    const infoTitle = document.getElementById('infoTitle');
+    const infoDesc = document.getElementById('infoDesc');
+    
+    let currentIndex = 0;
+    const intervalTime = 10000; // 10 seconds
+
+    // Initialize images
+    images.forEach((img, index) => {
+      const imageEl = document.createElement('img');
+      imageEl.src = img.src;
+      imageEl.alt = img.title;
+      imageEl.classList.add('hero-image');
+      if (index === 0) imageEl.classList.add('active');
+      card.insertBefore(imageEl, card.firstChild);
+      
+      // Create dot
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      if (index === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(index));
+      progressBar.appendChild(dot);
+    });
+
+    const imageElements = card.querySelectorAll('.hero-image');
+    const dots = progressBar.querySelectorAll('.dot');
+
+    function updateInfo(index) {
+      infoTitle.textContent = images[index].title;
+      infoDesc.textContent = images[index].desc;
+    }
+
+    function goToSlide(index) {
+      // Remove active from current
+      imageElements[currentIndex].classList.remove('active');
+      dots[currentIndex].classList.remove('active');
+      
+      // Set new index
+      currentIndex = index;
+      
+      // Add active to new
+      imageElements[currentIndex].classList.add('active');
+      dots[currentIndex].classList.add('active');
+      
+      updateInfo(currentIndex);
+    }
+
+    function nextSlide() {
+      const nextIndex = (currentIndex + 1) % images.length;
+      goToSlide(nextIndex);
+    }
+
+    // Auto-advance every 10 seconds
+    let slideInterval = setInterval(nextSlide, intervalTime);
+
+   
+
+    // Initialize info
+    updateInfo(0);
+  </script>
+<script src="{% static 'js/app.js'%}"></script>
+</body>
+</html>

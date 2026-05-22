@@ -1,0 +1,41 @@
+{% extends 'blog/base.html' %}
+{%block content%}
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Videos</h2>
+
+    <div class="grid">
+      {% for video in all_videos %}
+      <a href="{% url 'video_detail' video.pk %}">
+        <div class="card">
+          {% if video.thumbnail %}
+          <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" style="height:180px; object-fit:cover;">
+          {% else %}
+          <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800" alt="{{ video.title }}" style="height:180px; object-fit:cover;">
+          {% endif %}
+
+          {% if video.youtube_link %}
+          <span class="tag">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:3px;"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            YouTube
+          </span>
+          {% elif video.video_file %}
+          <span class="tag">Uploaded</span>
+          {% endif %}
+
+          <h3>{{ video.title }}</h3>
+          {% if video.description %}
+          <p style="color: rgba(255,255,255,0.65); font-size:0.85rem; margin-top:6px; display: -webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+            {{ video.description|striptags|truncatechars:120}}
+          </p>
+          {% endif %}
+          
+      </div>
+      </a>
+      {% empty %}
+      <p style="color: rgba(255,255,255,0.7);">No videos available yet.</p>
+      {% endfor %}
+    </div>
+    </div>
+</section>
+{%endblock%}
