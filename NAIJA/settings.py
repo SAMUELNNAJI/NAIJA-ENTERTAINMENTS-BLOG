@@ -15,6 +15,7 @@ import os
 import environ
 from dotenv import load_dotenv
 
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -49,8 +50,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Blog',
     'django_summernote',
-    
 ]
+
+env = environ.Env()
+
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
+
 
 JAZZMIN_SETTINGS = {
      # title of the window (Will default to current_admin_site.site_header if absent or None)
@@ -107,12 +114,6 @@ WSGI_APPLICATION = 'NAIJA.wsgi.application'
 # }
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-env = environ.Env()
-
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
 DATABASES = {
     'default': env.db('DATABASE_URL')
 }
@@ -155,6 +156,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 SATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
