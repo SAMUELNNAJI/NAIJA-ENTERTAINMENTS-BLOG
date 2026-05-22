@@ -32,9 +32,9 @@ SECRET_KEY = 'django-insecure-v)m(d+oa^6mlzn$^&fa#!d$*@e4_-5tw#6-_5u1xulvwxrmy3i
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'naija-entertainments-blog.onrender.com',  # your Render domain
     '127.0.0.1',
     'localhost',
-    'naija-entertainments-blog-1.onrender.com',  # your Render domain
 ]
 
 # Application definition
