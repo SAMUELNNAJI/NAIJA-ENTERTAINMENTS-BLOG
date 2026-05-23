@@ -79,7 +79,7 @@
       {% for video in home_videos %}
       <a href="{% url 'video_detail' video.pk %}" class="card-link">
       <div class="card">
-        <img src="{{ video.video_file.url }}" alt="{{ video.title }}">
+        <img src="{{ video.thumbnail.url }}" alt="video thumbnail">
         <h3>{{ video.title }}</h3>
         <p>{{ video.description|striptags|truncatewords:20 }}</p>
         <span class="tag">{{ video.categories.all|join:', '}}</span>
