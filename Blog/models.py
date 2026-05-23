@@ -173,5 +173,5 @@ class Comment(models.Model):
         ordering = ['-created_at']
     
     def __str__(self):
-        return f'{self.name} commented on {self.music.title}'
+        return f'{self.name}'
     
