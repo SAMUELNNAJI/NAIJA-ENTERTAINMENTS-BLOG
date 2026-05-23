@@ -77,7 +77,7 @@
 
     <div class="grid">
       {% for video in home_videos %}
-      <a href="{% url 'movie_details' video.pk %}" class="card-link">
+      <a href="{% url 'video_detail' video.pk %}" class="card-link">
       <div class="card">
         <img src="{{ video.video_file.url }}" alt="{{ video.title }}">
         <h3>{{ video.title }}</h3>
