@@ -38,7 +38,7 @@
         <a href="{% url 'news_details' article.pk %}" class="card-link">
           <div class="card">
             {% if article.image %}
-              <img src="{{ article.image.url }}" alt="{{ article.title }}">
+              <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy">
             {% else %}
               <img src="{% static 'images/default-news.jpg' %}" alt="Default news image">
             {% endif %}
@@ -62,7 +62,7 @@
       <a href="{% url 'news_details' article.pk %}">
         {% if article %}
             <div class="card">
-                    <img src="{{ article.image.url }}" alt="{{ article.title }}" style="height: 300px;">
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" style="height: 300px;" loading="lazy">
                 <h3>{{ article.title }}</h3>
                 <p>{{ article.description|striptags|truncatewords:50}}</p>
                 <span class="tag">{{ article.news_tags.all|join:", " }}</span>

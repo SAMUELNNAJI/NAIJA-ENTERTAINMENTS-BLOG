@@ -35,7 +35,7 @@
       <a href="{% url 'music_details' music.pk %}" class="card-link">
     <div class="card">
       <!-- Use {{ music }} variables, not static text -->
-      <img src="{{music.cover_image.url}}" alt="{{ music.title }}">
+      <img src="{{music.cover_image.url}}" alt="{{ music.title }}" loading="lazy">
       <h3>{{ music.title }}</h3>
       <p>{{ music.artist}}</p>
       <span class="tag">{{ music.genre}}</span>
@@ -86,7 +86,7 @@
       {% if song_of_the_week %}
         <a href="{% url 'music_details' song_of_the_week.pk %}" class="card-link">
         <div class="card">
-          <img src="{{ song_of_the_week.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ music.title }}" style="height: 400px;">
+          <img src="{{ song_of_the_week.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ music.title }}" style="height: 400px;" loading="lazy">
           <h3>{{ song_of_the_week.title }}</h3>
           <p>{{ song_of_the_week.artist|default:"Unknown Artist" }}</p>
           <span class="tag">{{ song_of_the_week.genre|default:"Uncategorized" }}</span>
@@ -106,7 +106,7 @@
       {% for gospel in gospel_music %}
       <a href="{% url 'music_details' gospel.pk %}" class="card-link">
     <div class="card">
-        <img src="{{ gospel.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ gospel.title }}">
+        <img src="{{ gospel.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ gospel.title }}" loading="lazy">
         <h3>{{ gospel.title }}</h3>
         <p>{{ gospel.artist|default:"Unknown Artist" }}</p>
         <span class="tag">{{ gospel.genre|default:"Uncategorized" }}</span>

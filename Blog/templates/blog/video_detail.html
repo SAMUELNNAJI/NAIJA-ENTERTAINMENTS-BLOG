@@ -1,5 +1,6 @@
 {% extends 'blog/base.html' %}
 {% load static %}
+{% load cloudinary_ext %}
 
 {% block title %}{{ video.title }}{% endblock %}
 
@@ -45,12 +46,12 @@
             <div class="video_player">
                 {% if video.video_file %}
                     <video controls controlsList="nodownload" preload="metadata" class="video">
-                        <source src="{{ video.video_file.url }}" type="video/mp4">
+                        <source src="{{ video.video_file.url|optimized_url }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 {% elif video.video_url %}
                     <video controls controlsList="nodownload" preload="metadata" class="video">
-                        <source src="{{ video.video_url }}" type="video/mp4">
+                        <source src="{{ video.video_url|optimized_url }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 {% else %}

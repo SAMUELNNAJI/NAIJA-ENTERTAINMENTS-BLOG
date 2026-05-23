@@ -4,6 +4,7 @@
 {% block title %} {{ music.title }} - {{ music.artist }}{% endblock %}
 
 {% block content %}
+{% load cloudinary_ext %}
 <div class="search-container">
     <form action="{% url 'search_music' %}" method="get" class="search-form">
       {% csrf_token %}
@@ -65,8 +66,8 @@
                         
                         {% if music.audio_file %}
                         <!-- Has uploaded file -->
-                        <audio controls>
-                            <source src="{{ music.audio_file.url }}" type="audio/mpeg">
+                        <audio controls preload="none">
+                            <source src="{{ music.audio_file.url|optimized_url }}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
                         <div class="download">
@@ -74,8 +75,8 @@
                         </div>
                     {% elif music.audio_url %}
                         <!-- Has external URL only -->
-                        <audio controls>
-                            <source src="{{ music.audio_url }}" type="audio/mpeg">
+                        <audio controls preload="none">
+                            <source src="{{ music.audio_url|optimized_url }}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
                         <div class="download">

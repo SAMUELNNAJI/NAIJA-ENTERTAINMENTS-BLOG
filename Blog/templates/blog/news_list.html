@@ -39,7 +39,7 @@
                     <a href="{% url 'news_details' news.pk %}" class="card-link">
                         <div class="card">
                             {% if news.image %}
-                                <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                                <img src="{{ news.image.url }}" alt="{{ news.title }}" loading="lazy">
                             {% else %}
                                 <img src="{% static 'images/default-news.jpg' %}" alt="Default news image">
                             {% endif %}

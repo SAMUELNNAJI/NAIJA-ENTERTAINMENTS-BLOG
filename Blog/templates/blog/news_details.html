@@ -35,7 +35,7 @@
      <div class="main">
         <div class="music_content">
             {% if news.image %}
-    <img src="{{ news.image.url }}" alt="{{ news.title }}">
+    <img src="{{ news.image.url }}" alt="{{ news.title }}" loading="lazy">
 {% else %} 
     <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="Default cover">
 {% endif %}
@@ -154,7 +154,7 @@
         {% if article %}
         <a href="{% url 'news_details' article.pk %}">
               <div class="card">
-                      <img src="{{ article.image.url }}" alt="{{ article.title }}" style="height: 150px;">
+                      <img src="{{ article.image.url }}" alt="{{ article.title }}" style="height: 150px;" loading="lazy">
                   <h3>{{ article.title }}</h3>
                   <p>{{ article.description|striptags|truncatewords:10}}</p>
                   <span class="tag">{{ article.news_tags.all|join:", " }}</span>
@@ -173,7 +173,7 @@
                 {% for items in celebrity_news %}
                 <a href="{% url 'news_details' items.pk %}">
                 <div class="card" style="margin-bottom: 10px;">
-                    <img src="{{ items.image.url|default:'/static/placeholder.jpg' }}" alt="{{ items.title }}">
+                    <img src="{{ items.image.url|default:'/static/placeholder.jpg' }}" alt="{{ items.title }}" loading="lazy">
                     <h3>{{ items.title }}</h3>
                     <p>{{ items.description|striptags|truncatewords:10 }}</p>
                     <span class="tag">
