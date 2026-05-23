@@ -16,6 +16,7 @@ import environ
 from dotenv import load_dotenv
 
 
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -159,16 +160,38 @@ STATIC_URL = 'static/'
 SATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+
+
+
+# SUMMERNOTE_CONFIG = {
+#     'attachment_url': '/summernote/upload/',
+#     'attachment_storage_class': 'Blog.storage.SummernoteCloudinaryStorage',  # ← Cloudinary
+#     'attachment_upload_to': 'summernote_uploads/',  # folder in Cloudinary
+#     'attachment_filesize_limit': 5 * 1024 * 1024,  # 5MB
+    
+#     'summernote': {
+#         'width': '100%',
+#         'height': '480',
+#         'toolbar': [
+#             ['style', ['style']],
+#             ['font', ['bold', 'underline', 'clear']],
+#             ['color', ['color']],
+#             ['para', ['ul', 'ol', 'paragraph']],
+#             ['table', ['table']],
+#             ['insert', ['link', 'picture', 'video']],
+#             ['view', ['fullscreen', 'codeview', 'help']],
+#         ],
+#     },
+# }
+
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dt6ti5ehx',
     'API_KEY': '468535496518662',
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-SUMMERNOTE_CONFIG = {
-    'attachment_url': '/summernote/upload/',  # ✅ relative path
-    # or use request.build_absolute_uri if you need absolute URLs
-}
+
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
