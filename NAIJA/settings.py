@@ -165,5 +165,10 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+SUMMERNOTE_CONFIG = {
+    'attachment_url': '/summernote/upload/',  # ✅ relative path
+    # or use request.build_absolute_uri if you need absolute URLs
+}
+
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
