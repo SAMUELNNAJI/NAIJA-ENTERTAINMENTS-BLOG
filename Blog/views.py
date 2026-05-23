@@ -11,10 +11,14 @@ from django.views.generic import ListView
 # Create your views here.
 def home(request):
     trending_music = Music.objects.filter(categories__name='Trending Music').order_by('-created_at')[:6]
+    
+    home_videos = Video.objects.filter(categories__name='Trending Videos').order_by('-created_at')[:6]
+    
     news = News.objects.all().order_by('-created_at')[:6]
     return render(request, 'blog/index.html', {
         'trending_music': trending_music,
         'news': news,
+        'home_videos': home_videos,
     })
 
 
@@ -36,6 +40,8 @@ def music(request):
 
 def movie(request):
     all_videos = Video.objects.all().order_by('-created_at')
+    
+    
     return render(request, 'blog/videos.html', {'all_videos': all_videos})
 
 def news_page(request):

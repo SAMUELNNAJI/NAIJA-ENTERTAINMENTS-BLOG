@@ -76,26 +76,19 @@
     <h2 class="section-title">Trending <span>Videos</span></h2>
 
     <div class="grid">
+      {% for video in home_videos %}
+      <a href="{% url 'movie_details' video.pk %}" class="card-link">
       <div class="card">
-        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800" alt="">
-        <h3>New Video Release</h3>
-        <p>Music Video | 2026</p>
-        <span class="tag">Video</span>
-      </div>
+        <img src="{{ video.video_file.url }}" alt="{{ video.title }}">
+        <h3>{{ video.title }}</h3>
+        <p>{{ video.description|striptags|truncatewords:20 }}</p>
+        <span class="tag">{{ video.categories.all|join:', '}}</span>
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=800" alt="">
-        <h3>Concert Highlights</h3>
-        <p>Live Show | 2026</p>
-        <span class="tag">Concert</span>
       </div>
-
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=800" alt="">
-        <h3>Behind The Scene</h3>
-        <p>Entertainment | 2026</p>
-        <span class="tag">BTS</span>
-      </div>
+      </a>
+      {% empty %}
+      <p>No videos available.</p>
+      {% endfor %}
     </div>
   </div>
   <button class="btn btn-primary" style="display: block; margin: 0 auto; margin-top: 20px" onclick="location.href='{% url 'movie_page' %}'"> SEE MORE VIDEO </button>
