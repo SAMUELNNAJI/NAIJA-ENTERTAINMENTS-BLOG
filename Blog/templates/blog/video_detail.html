@@ -6,14 +6,14 @@
 
 {% block content %}
 <div class="search-container">
-  <form action="{% url 'search_music' %}" method="get" class="search-form">
+  <form action="{% url 'search_video' %}" method="get" class="search-form">
     {% csrf_token %}
     <div class="search-wrapper">
       <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <input type="text" name="search" class="search-input" placeholder="Search for music, artists, albums..." autocomplete="off">
+      <input type="text" name="search_video" class="search-input" placeholder="Search for video, artists, albums..." autocomplete="off">
       <button type="submit" class="search-btn">
         <span>Search</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

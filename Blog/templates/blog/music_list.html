@@ -40,7 +40,7 @@
         <a href="{% url 'music_details' music.pk %}" class="card-link">
             <div class="card">
               <!-- Use {{ music }} variables, not static text -->
-              <img src="{{music.cover_image.url|optimized_url}}" alt="{{ music.title }}">
+              <img src="{{music.cover_image.url}}" alt="{{ music.title }}">
               <h3>{{ music.title }}</h3>
               <p>{{ music.artist}}</p>
               <span class="tag">{{ music.genre}}</span>

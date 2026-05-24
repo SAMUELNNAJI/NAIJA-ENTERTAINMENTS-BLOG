@@ -1,8 +1,29 @@
 {% extends 'blog/base.html' %}
 {%block content%}
+
+<div class="search-container">
+  <form action="{% url 'search_video' %}" method="get" class="search-form">
+    {% csrf_token %}
+    <div class="search-wrapper">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" name="search_video" class="search-input" placeholder="Search for video, artists, albums..." autocomplete="off">
+      <button type="submit" class="search-btn">
+        <span>Search</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
+
 <section class="section">
   <div class="container">
-    <h2 class="section-title">Videos</h2>
+    <h2 class="section-title">Latest <span>Videos</span></h2>
 
     <div class="grid">
       {% for video in all_videos %}
@@ -37,5 +58,62 @@
       {% endfor %}
     </div>
     </div>
+
+
+    <div class="pagination">
+      <div class="page-buttons">
+        {% if page_obj.has_previous %}
+          <a href="?page=1" class="page-btn edge">« First</a>
+          <a href="?page={{ page_obj.previous_page_number }}" class="page-btn edge">‹ Prev</a>
+        {% else %}
+          <span class="page-btn edge disabled">«First</span>
+          <span class="page-btn edge disabled">‹Prev</span>
+        {% endif %}
+    
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <span class="page-btn active">{{ num }}</span>
+          {% elif num == 1 or num == page_obj.paginator.num_pages %}
+            <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+          {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+            <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+          {% elif num == page_obj.number|add:'-2' or num == page_obj.number|add:'2' %}
+            <span class="page-btn dots">...</span>
+          {% endif %}
+        {% endfor %}
+    
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}" class="page-btn edge">Next ›</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}" class="page-btn edge">Last »</a>
+        {% else %}
+          <span class="page-btn edge disabled">Next›</span>
+          <span class="page-btn edge disabled">Last»</span>
+        {% endif %}
+      </div>
+    </div>
+
 </section>
+
+
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Video Of The <span>Week</span></h2>
+    <div class="grid">
+      
+      {% if video_of_the_week %}
+        <a href="{% url 'video_detail' video_of_the_week.pk %}" class="card-link">
+        <div class="card">
+          <img src="{{ video_of_the_week.thumbnail.url|default:'/static/placeholder.jpg' }}" alt="{{ video_of_the_week.title }}" style="height: 400px;" loading="lazy">
+          <h3>{{ video_of_the_week.title }}</h3>
+          <span class="tag">{{ video_of_the_week.genre|default:"Uncategorized" }}</span>
+        </div>
+      </a>
+       {% else %}
+        <p>No song of the week selected.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
 {%endblock%}

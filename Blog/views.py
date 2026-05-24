@@ -40,9 +40,19 @@ def music(request):
 
 def movie(request):
     all_videos = Video.objects.all().order_by('-created_at')
+    video_of_the_week = Video.objects.filter(categories__name='VIDEO OF THE WEEK').order_by('-created_at').first()
     
+    paginator = Paginator(all_videos, 6)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     
-    return render(request, 'blog/videos.html', {'all_videos': all_videos})
+    context = {
+        'all_videos': all_videos,
+        'page_obj': page_obj,
+        'video_of_the_week': video_of_the_week,
+    }
+    
+    return render(request, 'blog/videos.html', context)
 
 def news_page(request):
     news = News.objects.all().order_by('-created_at')
@@ -218,4 +228,23 @@ class SearchNews(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('search_news', '')
+        return context
+
+class SearchVideo(ListView):
+    model = Video
+    template_name = 'blog/video_list.html'
+    context_object_name = 'results'
+    paginate_by = 10
+    
+    def get_queryset(self):
+        search = self.request.GET.get('search_video', '')
+        if search:
+            return Video.objects.filter(
+                Q(title__icontains=search)
+            ).distinct()
+        return Video.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('search_video', '')
         return context
