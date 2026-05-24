@@ -66,7 +66,7 @@ class Music(models.Model):
     audio_url = models.URLField(max_length=500, blank=True, null=True, help_text="Enter external audio URL (e.g., SoundCloud, YouTube, etc.)")
     cover_image = models.ImageField(upload_to='cover_images/', default='ENTERTAINMENT/media/cover_images/DJ-Tunez-STATE-OF-MIND-Artwork.jpg')
     music_tag = models.ManyToManyField(Tag, related_name= 'music_tags', blank=True)
-    description = models.TextField() 
+    description = models.TextField(default="No description")
     categories = models.ManyToManyField(Category, related_name='music', blank=True)
     released_date = models.DateField()
     downloads = models.PositiveIntegerField(default=0)

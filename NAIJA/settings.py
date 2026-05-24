@@ -50,9 +50,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Blog',
-    'django_summernote',
     'cloudinary_storage',  # add this ABOVE staticfiles
     'cloudinary',
+    'django_summernote',
+    # 'ckeditor',
 ]
 
 env = environ.Env()
@@ -190,6 +191,7 @@ CLOUDINARY_STORAGE = {
     'API_KEY': '468535496518662',
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
