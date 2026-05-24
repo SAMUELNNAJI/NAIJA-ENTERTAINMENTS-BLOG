@@ -29,11 +29,11 @@
     <div id="grid">
      <div class="main">
         <div class="music_content">
-            {% if video.thumbnail %}
-    <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
-{% else %} 
-    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="Default cover">
-{% endif %}
+             {% if video.thumbnail %}
+     <img src="{{ video.thumbnail.url|optimized_url }}" alt="{{ video.title }}">
+ {% else %} 
+     <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="Default cover">
+ {% endif %}
 
 <h1>{{ video.title| default:"VIDEO TITLE" }} <a href="{% url 'download_video' video.pk %}" class="btn btn-primary" style="padding: 5px;">
     Downloads: ({{ video.downloads }})

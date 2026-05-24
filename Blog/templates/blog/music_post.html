@@ -35,11 +35,11 @@
     <div id="grid">
      <div class="main">
         <div class="music_content">
-            {% if music.cover_image %}
-    <img src="{{ music.cover_image.url }}" alt="{{ music.title }}">
-{% else %}
-    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="Default cover">
-{% endif %}
+             {% if music.cover_image %}
+     <img src="{{ music.cover_image.url|optimized_url }}" alt="{{ music.title }}">
+ {% else %}
+     <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="Default cover">
+ {% endif %}
 
             <h1>{{ music.title| default:"MUSIC" }} - <span>{{ music.artist| default:"TITLE" }} <a href="{% url 'download_song' music.pk %}" class="btn btn-primary" style="padding: 5px;">
                 Downloads: ({{ music.downloads }})

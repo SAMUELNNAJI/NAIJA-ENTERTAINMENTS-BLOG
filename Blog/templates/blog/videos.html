@@ -8,11 +8,11 @@
       {% for video in all_videos %}
       <a href="{% url 'video_detail' video.pk %}">
         <div class="card">
-          {% if video.thumbnail %}
-          <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" style="height:180px; object-fit:cover;" loading="lazy">
-          {% else %}
-          <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800" alt="{{ video.title }}" style="height:180px; object-fit:cover;">
-          {% endif %}
+           {% if video.thumbnail %}
+           <img src="{{ video.thumbnail.url|optimized_url }}" alt="{{ video.title }}" style="height:180px; object-fit:cover;" loading="lazy">
+           {% else %}
+           <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800" alt="{{ video.title }}" style="height:180px; object-fit:cover;">
+           {% endif %}
 
           {% if video.youtube_link %}
           <span class="tag">
