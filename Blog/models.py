@@ -1,6 +1,8 @@
 from django.db import models
 from .fields import SummernoteTextField  # your custom one
 from django.core.exceptions import ValidationError
+from urllib.parse import quote
+import re
 
 # Create your models here.
 class Category(models.Model):
@@ -139,16 +141,33 @@ class Video (models.Model):
     
 class Instrumental(models.Model):
     title = models.CharField(max_length=200)
+    producer_name = models.CharField(max_length=150, default="Unknown Producer")
     audio_file = models.FileField(upload_to='instrumental/')
     cover_image = models.ImageField(upload_to='instrumental_images/', blank=True, null=True)
     description = models.TextField(default="No description")
     categories = models.ManyToManyField(Category, related_name='instrumental', blank=True)
     released_date = models.DateField()
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    whatsapp = models.CharField(max_length=15, blank= True, default="Unknown", help_text="Enter Whatsapp number (e.g., 234234234234)")
     created_at = models.DateTimeField(auto_now_add=True)
     
+    def save(self, *args, **kwargs):
+        if self.whatsapp:
+            number = re.sub(r'[\s\-\+]', '', self.whatsapp)
+            if number.startswith('0'):
+                number = '234' + number [1:] 
+            self.number = number
+        super().save(*args, **kwargs)
+        
+    def get_whatsapp(self):
+        if not self.whatsapp:
+            return None
+        msg=f"Hi im interested in {self.title} by {self.producer_name}"
+        return f"https:/wa.me/{self.whatsapp}? tex={quote(msg)}"
+            
+    
     def __str__(self):
-        return title
+        return self.title
 
 class Comment(models.Model):
     music = models.ForeignKey(Music, related_name='music_comments', on_delete=models.CASCADE, null=True, blank=True)
