@@ -128,50 +128,23 @@
   <div class="container">
     <h2 class="section-title">Hot <span>Instrumentals</span></h2>
 
+    {% if instrumentals %}
     <div class="grid">
+      {% for instrumental in instrumentals %}
+      <a href="{% url 'instrumental_details' instrumental.pk %}">
       <div class="card">
-        <img src="https://images.unsplash.com/photo-1520697222865-7d22e7a2e5e8?w=800" alt="">
-        <h3>Afrobeats Beat</h3>
-        <p>Price: ₦5,000</p>
+        <img src="{{instrumental.cover_image.url}}" alt="{{instrumental.title}}" loading="lazy">
+        <h3>{{instrumental.title}} - <span>{{instrumetal.producer_name}}</span></h3>
+
+        <p>{{instrumental.price}}</p>
         <span class="tag">Paid Beat</span>
       </div>
+    </a>
+    {% endfor %}
+    {% else %}
+    <p>No Instrumentals Here</p>
+    {% endif %}
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1521337706264-a414f153a5f5?w=800" alt="">
-        <h3>Trap Instrumental</h3>
-        <p>Price: ₦7,000</p>
-        <span class="tag">Paid Beat</span>
-      </div>
-
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="">
-        <h3>Gospel Beat</h3>
-        <p>Price: ₦4,000</p>
-        <span class="tag">Paid Beat</span>
-      </div>
-
-
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1520697222865-7d22e7a2e5e8?w=800" alt="">
-        <h3>Afrobeats Beat</h3>
-        <p>Price: ₦5,000</p>
-        <span class="tag">Paid Beat</span>
-      </div>
-
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1521337706264-a414f153a5f5?w=800" alt="">
-        <h3>Trap Instrumental</h3>
-        <p>Price: ₦7,000</p>
-        <span class="tag">Paid Beat</span>
-      </div>
-
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="">
-        <h3>Gospel Beat</h3>
-        <p>Price: ₦4,000</p>
-        <span class="tag">Paid Beat</span>
-      </div>
-    </div>
   </div>
 
   <button class="btn btn-primary" style="display: block; margin: 0 auto; margin-top: 20px;" onclick="location.href='{% url 'instrumentals_page' %}'">

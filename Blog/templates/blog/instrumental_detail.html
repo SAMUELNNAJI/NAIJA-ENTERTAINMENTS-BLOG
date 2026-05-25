@@ -1,0 +1,237 @@
+
+{% extends 'blog/base.html' %}
+
+{% block title %} {{ music.title }} - {{ music.artist }}{% endblock %}
+
+{% block content %}
+{% load cloudinary_ext %}
+<div class="search-container">
+    <form action="{% url 'search_music' %}" method="get" class="search-form">
+      {% csrf_token %}
+      <div class="search-wrapper">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          name="search" 
+          class="search-input" 
+          placeholder="Search for music, artists, albums..." 
+          autocomplete="off"
+        >
+        <button type="submit" class="search-btn">
+          <span>Search</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+<section class="section">
+    <div id="grid">
+     <div class="main">
+        <div class="music_content">
+             {% if music.cover_image %}
+     <img src="{{ music.cover_image.url|optimized_url }}" alt="{{ music.title }}">
+ {% else %}
+     <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="Default cover">
+ {% endif %}
+
+            <h1>{{ music.title| default:"MUSIC" }} - <span>{{ music.artist| default:"TITLE" }} <a href="{% url 'download_song' music.pk %}" class="btn btn-primary" style="padding: 5px;">
+                Downloads: ({{ music.downloads }})
+            </a> </span> </h1>
+            <p class="music_description" style="color: #ffffff;">
+                {{ music.description|safe|default:"No description" }}
+            </p>
+            {% comment %} TAGS HERE {% endcomment %}
+            <div>
+              {% for tag in music.music_tag.all %}
+              <div class="tag btn btn-primary">
+                  <span>{{ tag.name }}</span>
+              </div>
+              {% endfor %}
+          </div>
+                <div class="music_player">
+                    <div class="img"> 
+                        <img src="{{ music.cover_image.url }}" alt="{{ music.title }}" > 
+                    </div>
+                    <div class="player">
+                        <div class="music_info">
+                        <h3>{{ music.title| default:"MUSIC" }} - <span>{{ music.artist| default:"TITLE" }}</span> </h3>
+                        </div>
+                        
+                        {% if music.audio_file %}
+                        <!-- Has uploaded file -->
+                        <audio controls preload="none">
+                            <source src="{{ music.audio_file.url|optimized_url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <div class="download">
+                            <a href="{{ music.audio_file.url }}" class="download-btn" download>Download</a>
+                        </div>
+                    {% elif music.audio_url %}
+                        <!-- Has external URL only -->
+                        <audio controls preload="none">
+                            <source src="{{ music.audio_url|optimized_url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <div class="download">
+                            <a href="{{ music.audio_url }}" class="download-btn" download>Download</a>
+                        </div>
+                    {% else %}
+                        <p style="color: rgba(255,255,255,0.7); padding: 10px;">No audio available</p>
+                    {% endif %}
+
+                </div>
+                
+                </div>
+                
+
+                <div class="share">
+                  <span>SHARE:</span>
+                  
+                  <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" 
+                     class="btn btn-primary" target="_blank" rel="noopener">
+                      <i class="fab fa-facebook-f"></i> FACEBOOK
+                  </a>
+                  
+                  <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ music.title|default:'Check this out'|urlencode }}" 
+                     class="btn btn-primary" target="_blank" rel="noopener">
+                      <i class="fab fa-twitter"></i> TWITTER
+                  </a>
+                  
+                  <a href="https://wa.me/?text={{ music.title|default:'Check this out'|urlencode }}%20-%20{{ request.build_absolute_uri|urlencode }}" 
+                     class="btn btn-primary" target="_blank" rel="noopener">
+                      <i class="fab fa-whatsapp"></i> WHATSAPP
+                  </a>
+              </div>
+
+
+                 {% comment %} COMMENTS SECTION {% endcomment %}
+    <div class="comments">
+        <h2 style="margin-top: 50px;">Music <span>Comments ({{ comments.count }})</span></h2>
+        
+        {% for comment in comment_page %}
+        <div class="comment">
+            <div class="comment-author">
+                <div class="comment-header">
+                    <div class="comment-avatar">{{ comment.name|slice:":2"|upper }}</div>
+                    <div class="comment-meta">
+                        <h3>{{ comment.name }}</h3>
+                        <span class="comment-date">{{ comment.created_at|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+                <p class="comment-text">{{ comment.comment }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p class="no-comments">No comments yet. Be the first to comment!</p>
+        {% endfor %}
+
+        <div class="pagination">
+            <div class="page-buttons">
+              {% if comment_page.has_previous %}
+                <a href="?comment_page=1" class="page-btn edge">« First</a>
+                <a href="?comment_page={{ comment_page.previous_page_number }}" class="page-btn edge">‹ Prev</a>
+              {% else %}
+                <span class="page-btn edge disabled">« First</span>
+                <span class="page-btn edge disabled">‹ Prev</span>
+              {% endif %}
+          
+              {% for num in comment_page.paginator.page_range %}
+                {% if comment_page.number == num %}
+                  <span class="page-btn active">{{ num }}</span>
+                {% elif num == 1 or num == comment_page.paginator.num_pages %}
+                  <a href="?comment_page={{ num }}" class="page-btn">{{ num }}</a>
+                {% elif num > comment_page.number|add:'-2' and num < comment_page.number|add:'2' %}
+                  <a href="?comment_page={{ num }}" class="page-btn">{{ num }}</a>
+                {% elif num == comment_page.number|add:'-2' or num == comment_page.number|add:'2' %}
+                  <span class="page-btn dots">...</span>
+                {% endif %}
+              {% endfor %}
+          
+              {% if comment_page.has_next %}
+                <a href="?comment_page={{ comment_page.next_page_number }}" class="page-btn edge">Next ›</a>
+                <a href="?comment_page={{ comment_page.paginator.num_pages }}" class="page-btn edge">Last »</a>
+              {% else %}
+                <span class="page-btn edge disabled">Next ›</span>
+                <span class="page-btn edge disabled">Last ›</span>
+              {% endif %}
+            </div>
+          </div>
+    </div>
+    
+            <div class="comment-content">
+
+                <div class="comment_form">
+                    <h2>Leave a <span>Comment</span></h2>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        
+                        {{ form.as_p }}
+                        
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+        
+     </div>
+     <div class="sidebar">
+      
+        <div class="container">
+            <h2 class="section-title">Song Of The <span>Week</span></h2>
+            <div class="grid">
+              {% if song_of_the_week %}
+              <a href="{% url 'music_details' song_of_the_week.pk %}">
+                <div class="card">
+                  <img src="{{ song_of_the_week.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ music.title }}" style="height: 200px;">
+                  <h3>{{ song_of_the_week.title }}</h3>
+                  <p>{{ song_of_the_week.artist|default:"Unknown Artist" }}</p>
+                  <span class="tag">{{ song_of_the_week.genre|default:"Uncategorized" }}</span>
+                </div>
+              </a>
+             {% else %}
+            <p>No song of the week selected.</p>
+            {% endif %}
+            </div>
+          </div>
+
+
+          
+        <div class="container" style="margin: 10px auto">
+            <h2 class="section-title">Trending <span>Music</span></h2>
+            <div class="grid">
+                {% for items in trending_now %}
+                <a href="{% url 'music_details' items.pk %}">
+                <div class="card" style="margin-bottom: 10px;">
+                    <img src="{{ items.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ items.title }}">
+                    <h3>{{ items.title }}</h3>
+                    <p>{{ items.artist|default:"Unknown Artist" }}</p>
+                    <span class="tag">{{ items.genre|default:"Uncategorized" }}</span>
+                </div>
+                </a>
+                {% endfor %}
+
+            </div>
+        </div>
+
+     </div>
+     </div>
+   
+
+</section>
+
+<section>
+    
+</section>
+
+{% endblock %}
+
+    

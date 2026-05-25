@@ -15,6 +15,7 @@ urlpatterns = [
     path('movies/', views.movie, name='movie_page'),
     path('news/', views.news_page, name='news_page'),
     path('instrumentals/', views.instrumentals, name='instrumentals_page'),
+    path('instrumental/<int:pk>/', views.instrumental_post, name='instrumental_details'),
     path('post/<int:pk>/', views.post, name='music_details'),
     path('news/<int:pk>/', views.news_Page, name='news_details'),
     path('video/<int:pk>/', views.video_detail, name='video_detail'),

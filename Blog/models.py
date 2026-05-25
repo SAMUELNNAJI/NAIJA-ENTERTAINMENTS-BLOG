@@ -167,7 +167,7 @@ class Instrumental(models.Model):
             
     
     def __str__(self):
-        return self.title
+        return f'{self.title} by {self.producer_name}'
 
 class Comment(models.Model):
     music = models.ForeignKey(Music, related_name='music_comments', on_delete=models.CASCADE, null=True, blank=True)
@@ -192,5 +192,5 @@ class Comment(models.Model):
         ordering = ['-created_at']
     
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name}' 
     

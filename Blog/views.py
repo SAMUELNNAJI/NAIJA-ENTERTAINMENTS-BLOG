@@ -7,18 +7,23 @@ from django.core.paginator import Paginator
 from django.db.models import F
 from django.db.models import Q
 from django.views.generic import ListView
+from django.template.context_processors import request
 
+from Blog.models import Instrumental
 # Create your views here.
 def home(request):
     trending_music = Music.objects.filter(categories__name='Trending Music').order_by('-created_at')[:6]
     
     home_videos = Video.objects.filter(categories__name='Trending Videos').order_by('-created_at')[:6]
     
+    instrumentals = Instrumental.objects.filter(categories__name = 'Hot Instrumentals').order_by('-created_at')[:6]
+    
     news = News.objects.all().order_by('-created_at')[:6]
     return render(request, 'blog/index.html', {
         'trending_music': trending_music,
         'news': news,
         'home_videos': home_videos,
+        'instrumentals': instrumentals,
     })
 
 
@@ -60,7 +65,17 @@ def news_page(request):
     return render(request, 'blog/news.html', {'news': news, 'article': article})
 
 def instrumentals(request):
-    return render(request, 'blog/instrumentals.html')
+    All_Instrumentals = Instrumental.objects.all()
+    
+    pagination = Paginator(All_Instrumentals, 6)
+    page_number = request.GET.get('page')
+    page_obj = pagination.get_page(page_number)
+    
+    context = {
+        'All_Instrumentals': All_Instrumentals,
+        'page_obj': page_obj,
+    }
+    return render(request, 'blog/instrumentals.html', context)
 
 
 def post(request, pk):
@@ -186,6 +201,16 @@ def download_video(request, pk):
     response['Content-Disposition'] = f'attachment; filename="{video.title}_video"'
     return response
 
+
+
+def instrumental_post(request, pk):
+    all_instrmentals = Instrumental.objects.all()
+    
+    context ={
+        'all_instrmentals': all_instrmentals,
+    }
+    
+    return render (request, 'blog/instrumental_detail.html', context )
 
 # SEARCH MUSIC
 class SearchMusic(ListView):

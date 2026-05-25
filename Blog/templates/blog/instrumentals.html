@@ -3,29 +3,58 @@
 <section class="section">
   <div class="container">
     <h2 class="section-title">Buy <span>Instrumentals</span></h2>
-
-    <div class="grid">
+    
+    <div class="grid"> 
+     {% if All_Instrumentals %}
+     {% for Instrumental in All_Instrumentals %}
+      <a href="{% url 'instrumental_details' Instrumental.pk %}">
       <div class="card">
-        <img src="https://images.unsplash.com/photo-1520697222865-7d22e7a2e5e8?w=800" alt="">
-        <h3>Afrobeats Beat</h3>
-        <p>Price: ₦5,000</p>
+        <img src="{{Instrumental.cover_image.url}}" alt="{{Instrumental.title}}" loading="lazy">
+        <h3>{{Instrumental.title}} - <span>{{instrumetal.producer_name}}</span></h3>
+        <p>{{Instrumental.price}}</p>
         <button class="btn btn-primary" style="margin-top: 10px;">Buy Now</button>
       </div>
+    </a>
+      {% endfor %}
+      {% else %}
+      <p>No Instrumentals Here</p>
+      {% endif %}
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1521337706264-a414f153a5f5?w=800" alt="">
-        <h3>Trap Instrumental</h3>
-        <p>Price: ₦7,000</p>
-        <button class="btn btn-primary" style="margin-top: 10px;">Buy Now</button>
-      </div>
-
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="">
-        <h3>Gospel Beat</h3>
-        <p>Price: ₦4,000</p>
-        <button class="btn btn-primary" style="margin-top: 10px;">Buy Now</button>
-      </div>
     </div>
   </div>
+
+  {% comment %} PAGINATOR HERE {% endcomment %}
+  <div class="pagination">
+    <div class="page-buttons">
+      {% if page_obj.has_previous %}
+        <a href="?page=1" class="page-btn edge">« First</a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-btn edge">‹ Prev</a>
+      {% else %}
+        <span class="page-btn edge disabled">«First</span>
+        <span class="page-btn edge disabled">‹Prev</span>
+      {% endif %}
+  
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <span class="page-btn active">{{ num }}</span>
+        {% elif num == 1 or num == page_obj.paginator.num_pages %}
+          <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+          <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+        {% elif num == page_obj.number|add:'-2' or num == page_obj.number|add:'2' %}
+          <span class="page-btn dots">...</span>
+        {% endif %}
+      {% endfor %}
+  
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-btn edge">Next ›</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="page-btn edge">Last »</a>
+      {% else %}
+        <span class="page-btn edge disabled">Next›</span>
+        <span class="page-btn edge disabled">Last»</span>
+      {% endif %}
+    </div>
+  </div>
+
 </section>
 {% endblock %}
