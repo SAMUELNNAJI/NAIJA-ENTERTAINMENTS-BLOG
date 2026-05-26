@@ -21,4 +21,3 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class SummernoteModelAdmin(SummernoteModelAdmin):
     summernote_fields = ('description',)
-
