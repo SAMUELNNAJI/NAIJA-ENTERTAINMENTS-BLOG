@@ -159,8 +159,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
+STATIC_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 CLOUDINARY_STORAGE = {
@@ -172,5 +171,4 @@ CLOUDINARY_STORAGE = {
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
