@@ -3,6 +3,8 @@ from .fields import SummernoteTextField  # your custom one
 from django.core.exceptions import ValidationError
 from urllib.parse import quote
 import re
+from cloudinary_storage.storage import VideoMediaCloudinaryStorage
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 # Create your models here.
 class Category(models.Model):
@@ -62,7 +64,7 @@ class Music(models.Model):
     artist = models.CharField(max_length=200)
     genre = models.CharField(max_length=200)
     # Option 1: Upload file
-    audio_file = models.FileField(upload_to='music/', blank=True, null=True)
+    audio_file = models.FileField(upload_to='music/', blank=True, null=True, storage = RawMediaCloudinaryStorage())
     
     # Option 2: External URL
     audio_url = models.URLField(max_length=500, blank=True, null=True, help_text="Enter external audio URL (e.g., SoundCloud, YouTube, etc.)")
@@ -118,7 +120,7 @@ class News(models.Model):
 class Video (models.Model):
     title = models.CharField( max_length=250)
     description = models.TextField(blank=True, help_text="Brief description of the video.")
-    video_file   = models.FileField(upload_to='videos/files/', blank=True, null=True, help_text="Upload a video file directly. Leave blank if using a YouTube URL.")
+    video_file   = models.FileField(upload_to='videos/files/', blank=True, null=True, storage=VideoMediaCloudinaryStorage(), help_text="Upload a video file directly. Leave blank if using a YouTube URL.")
     video_url = models.URLField(blank=True, null=True, help_text="Enter a Direct Link to the video file.")
     thumbnail = models.ImageField(upload_to='videos/thumbnails/')
     categories = models.ManyToManyField(Category, related_name='videos', blank=True)
@@ -142,7 +144,7 @@ class Video (models.Model):
 class Instrumental(models.Model):
     title = models.CharField(max_length=200)
     producer_name = models.CharField(max_length=150, default="Unknown Producer")
-    audio_file = models.FileField(upload_to='instrumental/')
+    audio_file = models.FileField(upload_to='instrumental/', storage = RawMediaCloudinaryStorage())
     cover_image = models.ImageField(upload_to='instrumental_images/', blank=True, null=True)
     description = models.TextField(default="No description")
     categories = models.ManyToManyField(Category, related_name='instrumental', blank=True)

@@ -36,7 +36,7 @@
      <div class="main">
         <div class="music_content">
              {% if music.cover_image %}
-     <img src="{{ music.cover_image.url|optimized_url }}" alt="{{ music.title }}">
+     <img src="{{ music.cover_image.url}}" alt="{{ music.title }}">
  {% else %}
      <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="Default cover">
  {% endif %}

@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-v)m(d+oa^6mlzn$^&fa#!d$*@e4_-5tw#6-_5u1xulvwxrmy3i')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'naija-entertainments-blog.onrender.com',
@@ -35,8 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     # 'cloudinary_storage',
     'django.contrib.staticfiles',
-    'cloudinary',
-    'Blog',
+'cloudinary_storage',
+            'cloudinary',
+            'Blog',
     'django_summernote',
 ]
 
@@ -124,9 +125,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Security headers for production
-# SECURE_SSL_REDIRECT = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SECURE_BROWSER_XSS_FILTER = True
-# SECURE_CONTENT_TYPE_NOSNIFF = True
