@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from urllib.parse import quote
 import re
 from cloudinary_storage.storage import VideoMediaCloudinaryStorage
-from cloudinary_storage.storage import RawMediaCloudinaryStorage
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 # Create your models here.
 class Category(models.Model):
@@ -64,7 +64,7 @@ class Music(models.Model):
     artist = models.CharField(max_length=200)
     genre = models.CharField(max_length=200)
     # Option 1: Upload file
-    audio_file = models.FileField(upload_to='music/', blank=True, null=True, storage = RawMediaCloudinaryStorage())
+    audio_file = models.FileField(upload_to='music/', blank=True, null=True, storage = MediaCloudinaryStorage())
     
     # Option 2: External URL
     audio_url = models.URLField(max_length=500, blank=True, null=True, help_text="Enter external audio URL (e.g., SoundCloud, YouTube, etc.)")
@@ -144,7 +144,7 @@ class Video (models.Model):
 class Instrumental(models.Model):
     title = models.CharField(max_length=200)
     producer_name = models.CharField(max_length=150, default="Unknown Producer")
-    audio_file = models.FileField(upload_to='instrumental/', storage = RawMediaCloudinaryStorage())
+    audio_file = models.FileField(upload_to='instrumental/', storage = MediaCloudinaryStorage())
     cover_image = models.ImageField(upload_to='instrumental_images/', blank=True, null=True)
     description = models.TextField(default="No description")
     categories = models.ManyToManyField(Category, related_name='instrumental', blank=True)
