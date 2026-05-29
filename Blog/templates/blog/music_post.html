@@ -67,12 +67,13 @@
                         {% if music.audio_file %}
                         <!-- Has uploaded file -->
                         <audio controls preload="none">
-                            <source src="{{ music.audio_file.url|optimized_url }}" type="audio/mpeg">
+                            <source src="{{ music.audio_file.url }}?fl_attachment=false" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
-                        <div class="download">
-                            <a href="{{ music.audio_file.url }}" class="download-btn" download>Download</a>
-                        </div>
+                       <a href="{{ music.audio_file.url }}?fl_attachment={{ music.title|slugify }}.mp3" 
+                       class="download-btn">
+                       Download
+                    </a>
                     {% elif music.audio_url %}
                         <!-- Has external URL only -->
                         <audio controls preload="none">

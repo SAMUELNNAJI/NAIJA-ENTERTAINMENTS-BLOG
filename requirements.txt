@@ -11,9 +11,7 @@ django-cloudinary-storage==0.3.0
 django-environ==0.13.0
 django-jazzmin==3.0.4
 django-js-asset==3.1.2
-django-simpleui==2026.1.13
 django-summernote==0.8.20.0
-django-unfold==0.94.0
 dotenv==0.9.9
 environ==1.0
 gunicorn==26.0.0
