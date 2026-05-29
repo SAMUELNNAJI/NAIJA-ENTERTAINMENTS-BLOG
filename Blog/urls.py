@@ -16,6 +16,7 @@ urlpatterns = [
     path('news/', views.news_page, name='news_page'),
     path('instrumentals/', views.instrumentals, name='instrumentals_page'),
     path('instrumental/<int:pk>/', views.instrumental_post, name='instrumental_details'),
+    path('download_instrumental/<int:pk>/', views.download_instrumental, name='download_instrumental'),
     path('post/<int:pk>/', views.post, name='music_details'),
     path('news/<int:pk>/', views.news_Page, name='news_details'),
     path('video/<int:pk>/', views.video_detail, name='video_detail'),

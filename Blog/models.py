@@ -160,14 +160,20 @@ class Instrumental(models.Model):
             number = re.sub(r'[\s\-\+]', '', self.whatsapp)
             if number.startswith('0'):
                 number = '234' + number [1:] 
-            self.number = number
+            # keep cleaned number in-memory if needed; do not persist extra field
+            self._clean_whatsapp_number = number
         super().save(*args, **kwargs)
         
     def get_whatsapp(self):
+        """Return a WhatsApp click-to-chat URL with an encoded text message."""
         if not self.whatsapp:
             return None
-        msg=f"Hi im interested in {self.title} by {self.producer_name}"
-        return f"https:/wa.me/{self.whatsapp}? tex={quote(msg)}"
+        # Clean number on the fly to avoid relying on save() side-effects
+        number = re.sub(r'[\s\-\+]', '', self.whatsapp)
+        if number.startswith('0'):
+            number = '234' + number[1:]
+        msg = f"Hi I'm interested in {self.title} by {self.producer_name}"
+        return f"https://wa.me/{number}?text={quote(msg)}"
             
     
     def __str__(self):

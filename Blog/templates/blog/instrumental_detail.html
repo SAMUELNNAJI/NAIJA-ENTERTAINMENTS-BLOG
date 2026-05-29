@@ -1,7 +1,7 @@
 
 {% extends 'blog/base.html' %}
 
-{% block title %} {{ music.title }} - {{ music.artist }}{% endblock %}
+{% block title %} {{ instrumental.title }} - {{ instrumental.producer_name }}{% endblock %}
 
 {% block content %}
 {% load cloudinary_ext %}
@@ -35,17 +35,16 @@
     <div id="grid">
      <div class="main">
         <div class="music_content">
-             {% if music.cover_image %}
-     <img src="{{ music.cover_image.url|optimized_url }}" alt="{{ music.title }}">
- {% else %}
-     <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="Default cover">
- {% endif %}
+             {% if instrumental.cover_image %}
+     <img src="{{ instrumental.cover_image.url }}" alt="{{ instrumental.title }}">
+      {% else %}
+          <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800" alt="Default cover">
+      {% endif %}
 
-            <h1>{{ music.title| default:"MUSIC" }} - <span>{{ music.artist| default:"TITLE" }} <a href="{% url 'download_song' music.pk %}" class="btn btn-primary" style="padding: 5px;">
-                Downloads: ({{ music.downloads }})
-            </a> </span> </h1>
+            <h1>{{ instrumental.title| default:"Instrumental" }} - <span>{{ instrumental.producer_name| default:"TITLE" }}  </span>
+          </h1>
             <p class="music_description" style="color: #ffffff;">
-                {{ music.description|safe|default:"No description" }}
+                {{ instrumental.description|safe|default:"No description" }}
             </p>
             {% comment %} TAGS HERE {% endcomment %}
             <div>
@@ -57,35 +56,42 @@
           </div>
                 <div class="music_player">
                     <div class="img"> 
-                        <img src="{{ music.cover_image.url }}" alt="{{ music.title }}" > 
+                        <img src="{{ instrumental.cover_image.url }}" alt="{{ instrumental.title }}" > 
                     </div>
                     <div class="player">
                         <div class="music_info">
-                        <h3>{{ music.title| default:"MUSIC" }} - <span>{{ music.artist| default:"TITLE" }}</span> </h3>
+                        <h3>{{ instrumental.title| default:"Instrumental" }} - <span>{{ instrumental.producer_name| default:"TITLE" }} 
+                          <a href="{instrumental.whatsapp}" class="btn primary-btn" style="background-color: red;" target="_blank" rel="noopener"> 
+                            <i class="fab fa-whatsapp"></i> CLICK TO BUY BEAT
+                            </a>
+                        </span>  
+                         
+                          
+                         </h3>
                         </div>
                         
-                        {% if music.audio_file %}
+                        {% if instrumental.audio_file %}
                         <!-- Has uploaded file -->
                         <audio controls preload="none">
-                            <source src="{{ music.audio_file.url|optimized_url }}" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
+                          <source src="{{ instrumental.audio_file.url }}?fl_attachment=false" type="audio/mpeg">
+                          Your browser does not support the audio element.
+                      </audio>
                         <div class="download">
-                            <a href="{{ music.audio_file.url }}" class="download-btn" download>Download</a>
+                          <a href="{% url 'download_instrumental' instrumental.pk %}" class="download-btn">Download</a>
                         </div>
-                    {% elif music.audio_url %}
+                    {% elif instrumental.audio_url %}
                         <!-- Has external URL only -->
                         <audio controls preload="none">
-                            <source src="{{ music.audio_url|optimized_url }}" type="audio/mpeg">
+                            <source src="{{ instrumental.audio_url|optimized_url }}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
-                        <div class="download">
-                            <a href="{{ music.audio_url }}" class="download-btn" download>Download</a>
+                        <div class="download" style="margin-bottom: 10px;">
+                          <a href="{% url 'download_instrumental' instrumental.pk %}" class="download-btn">Download</a>
                         </div>
                     {% else %}
                         <p style="color: rgba(255,255,255,0.7); padding: 10px;">No audio available</p>
                     {% endif %}
-
+                   
                 </div>
                 
                 </div>
@@ -99,7 +105,7 @@
                       <i class="fab fa-facebook-f"></i> FACEBOOK
                   </a>
                   
-                  <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ music.title|default:'Check this out'|urlencode }}" 
+                  <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ instrumental.title|default:'Check this out'|urlencode }}" 
                      class="btn btn-primary" target="_blank" rel="noopener">
                       <i class="fab fa-twitter"></i> TWITTER
                   </a>

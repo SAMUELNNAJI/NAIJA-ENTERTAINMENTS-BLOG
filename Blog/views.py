@@ -2,7 +2,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import Music, Video, News, Instrumental, Tag, Comment
 from django.http import FileResponse, StreamingHttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlparse, parse_qs, unquote, urlsplit
+from urllib.parse import urlparse, parse_qs, unquote, urlsplit, quote as urlquote
+import os
+from django.utils.text import slugify
 from urllib.request import Request, urlopen
 from .forms import Comment_Form
 from django.core.paginator import Paginator
@@ -254,15 +256,72 @@ def download_video(request, pk):
     return response
 
 
+def download_instrumental(request, pk):
+    """Stream the instrumental audio as an attachment so the browser downloads it."""
+    instrumental = get_object_or_404(Instrumental, pk=pk)
+
+    # Prefer uploaded file URL
+    remote_url = None
+    if instrumental.audio_file:
+        try:
+            remote_url = instrumental.audio_file.url
+        except Exception:
+            remote_url = None
+
+    # Fallback to external URL field if present
+    if not remote_url:
+        # Instrumental model currently doesn't have a separate audio_url field,
+        # but leave support here in case of future changes.
+        remote_url = getattr(instrumental, 'audio_url', None)
+
+    if not remote_url:
+        return HttpResponseBadRequest('No audio source available.')
+
+    try:
+        req = Request(remote_url, headers={'User-Agent': 'Mozilla/5.0'})
+        remote_resp = urlopen(req, timeout=30)
+    except (HTTPError, URLError):
+        return HttpResponseServerError('Unable to access the audio file.')
+
+    # Derive filename: use title and producer_name
+    parsed = urlparse(remote_url)
+    ext = os.path.splitext(parsed.path)[1] or '.mp3'
+    safe_title = slugify(instrumental.title) or 'instrumental'
+    safe_producer = slugify(instrumental.producer_name) or 'producer'
+    name = f"{safe_title}-{safe_producer}{ext}"
+    # Use RFC5987 encoded filename* for UTF-8 clients with the readable original
+    readable = f"{instrumental.title} - {instrumental.producer_name}{ext}"
+    encoded_readable = urlquote(readable)
+
+    def stream():
+        while True:
+            chunk = remote_resp.read(8192)
+            if not chunk:
+                break
+            yield chunk
+
+    response = StreamingHttpResponse(stream(), content_type=remote_resp.headers.get_content_type() or 'audio/mpeg')
+    response['Content-Disposition'] = f"attachment; filename=\"{name}\"; filename*=UTF-8''{encoded_readable}"
+    content_length = remote_resp.headers.get('Content-Length')
+    if content_length:
+        response['Content-Length'] = content_length
+    return response
+
+
 
 def instrumental_post(request, pk):
+    instrumental = get_object_or_404(Instrumental, pk=pk)
     all_instrmentals = Instrumental.objects.all()
-    
-    context ={
+
+    context = {
+        'instrumental': instrumental,
         'all_instrmentals': all_instrmentals,
     }
-    
-    return render (request, 'blog/instrumental_detail.html', context )
+
+    return render(request, 'blog/instrumental_detail.html', context)
+
+
+   
 
 # SEARCH MUSIC
 class SearchMusic(ListView):
