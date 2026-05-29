@@ -61,7 +61,7 @@
                     <div class="player">
                         <div class="music_info">
                         <h3>{{ instrumental.title| default:"Instrumental" }} - <span>{{ instrumental.producer_name| default:"TITLE" }} 
-                          <a href="{instrumental.whatsapp}" class="btn primary-btn" style="background-color: red;" target="_blank" rel="noopener"> 
+                          <a href="{{ instrumental.get_whatsapp }}" class="btn primary-btn" style="background-color: red;" target="_blank" rel="noopener"> 
                             <i class="fab fa-whatsapp"></i> CLICK TO BUY BEAT
                             </a>
                         </span>  

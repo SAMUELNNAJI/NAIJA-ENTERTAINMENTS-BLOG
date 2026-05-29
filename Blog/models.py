@@ -2,6 +2,7 @@ from django.db import models
 from .fields import SummernoteTextField  # your custom one
 from django.core.exceptions import ValidationError
 from urllib.parse import quote
+from django.utils.text import slugify
 import re
 from cloudinary_storage.storage import VideoMediaCloudinaryStorage
 # from cloudinary_storage.storage import RawMediaCloudinaryStorage
