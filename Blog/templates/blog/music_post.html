@@ -1,5 +1,6 @@
 
 {% extends 'blog/base.html' %}
+{% load cloudinary %}
 
 {% block title %} {{ music.title }} - {{ music.artist }}{% endblock %}
 
@@ -70,10 +71,7 @@
                             <source src="{{ music.audio_file.url }}?fl_attachment=false" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
-                       <a href="{{ music.audio_file.url }}?fl_attachment={{ music.title|slugify }}.mp3" 
-                       class="download-btn">
-                       Download
-                    </a>
+                      <a href="{% url 'download_song' music.pk %}" class="download-btn">Download</a>
                     {% elif music.audio_url %}
                         <!-- Has external URL only -->
                         <audio controls preload="none">

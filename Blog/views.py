@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Music, Video, News, Instrumental, Tag, Comment
-from django.http import FileResponse
-from urllib.parse import urlparse, parse_qs
+from django.http import FileResponse, StreamingHttpResponse, HttpResponseBadRequest, HttpResponseServerError
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlparse, parse_qs, unquote, urlsplit
+from urllib.request import Request, urlopen
 from .forms import Comment_Form
 from django.core.paginator import Paginator
 from django.db.models import F
@@ -118,15 +120,65 @@ def download_song(request, pk):
     song = get_object_or_404(Music, pk=pk)
     Music.objects.filter(pk=pk).update(downloads=F('downloads') + 1)
 
+    # If file is stored via Django storage (may be Cloudinary), try to open via storage
     if song.audio_file:
-        source = song.audio_file
         filename = f"{song.title}.mp3"
-    else:
-        source = song.audio_url
-        return redirect(source)
+        try:
+            fileobj = song.audio_file.storage.open(song.audio_file.name)
+        except Exception:
+            # Fallback: stream from the public URL
+            remote_url = song.audio_file.url
+            try:
+                req = Request(remote_url, headers={'User-Agent': 'Mozilla/5.0'})
+                remote_resp = urlopen(req, timeout=30)
+            except (HTTPError, URLError):
+                return HttpResponseServerError('Unable to access the audio file.')
 
-    response = FileResponse(source.open(), as_attachment=True)
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            def stream_remote():
+                while True:
+                    chunk = remote_resp.read(8192)
+                    if not chunk:
+                        break
+                    yield chunk
+
+            response = StreamingHttpResponse(stream_remote(), content_type=remote_resp.headers.get_content_type() or 'audio/mpeg')
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            content_length = remote_resp.headers.get('Content-Length')
+            if content_length:
+                response['Content-Length'] = content_length
+            return response
+
+        response = FileResponse(fileobj, as_attachment=True, filename=filename)
+        response['Content-Type'] = 'audio/mpeg'
+        return response
+
+    # No local file — proxy external URL as attachment
+    remote_url = song.audio_url
+    if not remote_url:
+        return HttpResponseBadRequest('No audio source available.')
+
+    # derive filename from URL
+    path = urlsplit(remote_url).path
+    name = unquote(path.split('/')[-1]) or f"{song.title}.mp3"
+
+    try:
+        req = Request(remote_url, headers={'User-Agent': 'Mozilla/5.0'})
+        remote_resp = urlopen(req, timeout=30)
+    except (HTTPError, URLError):
+        return HttpResponseServerError('Unable to download the audio file.')
+
+    def stream():
+        while True:
+            chunk = remote_resp.read(8192)
+            if not chunk:
+                break
+            yield chunk
+
+    response = StreamingHttpResponse(stream(), content_type=remote_resp.headers.get_content_type() or 'application/octet-stream')
+    response['Content-Disposition'] = f'attachment; filename="{name}"'
+    content_length = remote_resp.headers.get('Content-Length')
+    if content_length:
+        response['Content-Length'] = content_length
     return response
 
 
