@@ -148,6 +148,7 @@ class Instrumental(models.Model):
     title = models.CharField(max_length=200)
     producer_name = models.CharField(max_length=150, default="Unknown Producer")
     audio_file = CloudinaryField('audio', resource_type='video')
+    genre = models.CharField(max_length=100, blank=True, default="Afrobeat")
     cover_image = models.ImageField(upload_to='instrumental_images/', blank=True, null=True)
     description = models.TextField(default="No description")
     categories = models.ManyToManyField(Category, related_name='instrumental', blank=True)
@@ -184,6 +185,8 @@ class Comment(models.Model):
     music = models.ForeignKey(Music, related_name='music_comments', on_delete=models.CASCADE, null=True, blank=True)
     news = models.ForeignKey(News, related_name='news_comments', on_delete=models.CASCADE, null=True, blank=True)
     video = models.ForeignKey(Video, related_name='video_comments', on_delete=models.CASCADE, null=True, blank=True)
+    instrumental = models.ForeignKey(Instrumental, related_name='instrumental_comments', on_delete=models.CASCADE, null=True, blank=True)
+    
     name = models.CharField(max_length=200)
     email = models.EmailField()
     comment = models.TextField()
@@ -196,8 +199,11 @@ class Comment(models.Model):
             return f'{self.name} commented on {self.news.title}'
         elif self.video:
             return f'{self.name} commented on {self.video.title}'
+        elif self.instrumental:
+            return f'{self.name} commented on {self.instrumental.title}'
         else:
             return f'{self.name} commented on an unknown item'
+        
     
     class Meta:
         ordering = ['-created_at']

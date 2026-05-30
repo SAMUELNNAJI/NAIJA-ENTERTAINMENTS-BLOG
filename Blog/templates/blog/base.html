@@ -4,6 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block meta %}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="NAIJA ENTERTAINMENT">
+    <meta property="og:description" content="Discover music, instrumentals, videos and news from Naija Entertainment.">
+    <meta property="og:image" content="{% static 'images/default-share.jpg' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri|default:'' }}">
+    <meta property="og:site_name" content="NAIJA ENTERTAINMENT">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="NAIJA ENTERTAINMENT">
+    <meta name="twitter:description" content="Discover music, instrumentals, videos and news from Naija Entertainment.">
+  {% endblock %}
   <title>{% block title %}NAIJA ENTERTAINMENT{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>

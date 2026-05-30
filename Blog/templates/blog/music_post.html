@@ -1,8 +1,20 @@
 
 {% extends 'blog/base.html' %}
+{% load static %}
 {% load cloudinary %}
 
 {% block title %} {{ music.title }} - {{ music.artist }}{% endblock %}
+
+{% block meta %}
+  <meta property="og:title" content="{{ music.title }} - {{ music.artist }}">
+  <meta property="og:description" content="{{ music.description|truncatechars:160 }}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:image" content="{% if music.cover_image %}{{ music.cover_image.url }}{% else %}{% static 'images/default-share.jpg' %}{% endif %}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ music.title }} - {{ music.artist }}">
+  <meta name="twitter:description" content="{{ music.description|truncatechars:160 }}">
+  <meta name="twitter:image" content="{% if music.cover_image %}{{ music.cover_image.url }}{% else %}{% static 'images/default-share.jpg' %}{% endif %}">
+{% endblock %}
 
 {% block content %}
 {% load cloudinary_ext %}

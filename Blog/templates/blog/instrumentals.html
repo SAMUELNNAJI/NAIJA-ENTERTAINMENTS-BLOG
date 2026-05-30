@@ -1,5 +1,35 @@
 {% extends 'blog/base.html' %}
 {%block content%}
+
+
+<div class="search-container">
+  <form action="{% url 'search_instrumental' %}" method="get" class="search-form">
+    {% csrf_token %}
+    <div class="search-wrapper">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input 
+        type="text" 
+        name="search_instrumental"
+        class="search-input" 
+        placeholder="Search for beats, producers, genres..." 
+        autocomplete="off"
+      >
+      <button type="submit" class="search-btn">
+        <span>Search</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
+
+
+
 <section class="section">
   <div class="container">
     <h2 class="section-title">Buy <span>Instrumentals</span></h2>

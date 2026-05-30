@@ -1,7 +1,18 @@
 {% extends 'blog/base.html' %} 
+{% load static %}
 
+{% block title %} {{ news.title }}{% endblock %}
 
-{% block title %} {{ music.title }} News {{ music.artist }}{% endblock %}
+{% block meta %}
+  <meta property="og:title" content="{{ news.title }}">
+  <meta property="og:description" content="{{ news.description|truncatechars:160 }}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:image" content="{% if news.image %}{{ news.image.url }}{% else %}{% static 'images/default-share.jpg' %}{% endif %}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ news.title }}">
+  <meta name="twitter:description" content="{{ news.description|truncatechars:160 }}">
+  <meta name="twitter:image" content="{% if news.image %}{{ news.image.url }}{% else %}{% static 'images/default-share.jpg' %}{% endif %}">
+{% endblock %}
 
 {% block content %}
 <div class="search-container">

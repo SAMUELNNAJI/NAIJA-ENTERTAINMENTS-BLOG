@@ -4,6 +4,17 @@
 
 {% block title %}{{ video.title }}{% endblock %}
 
+{% block meta %}
+  <meta property="og:title" content="{{ video.title }}">
+  <meta property="og:description" content="{{ video.description|truncatechars:160 }}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:image" content="{% if video.thumbnail %}{{ video.thumbnail.url }}{% elif video.video_file %}{{ video.video_file.url }}{% else %}{% static 'images/default-share.jpg' %}{% endif %}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ video.title }}">
+  <meta name="twitter:description" content="{{ video.description|truncatechars:160 }}">
+  <meta name="twitter:image" content="{% if video.thumbnail %}{{ video.thumbnail.url }}{% elif video.video_file %}{{ video.video_file.url }}{% else %}{% static 'images/default-share.jpg' %}{% endif %}">
+{% endblock %}
+
 {% block content %}
 <div class="search-container">
   <form action="{% url 'search_video' %}" method="get" class="search-form">

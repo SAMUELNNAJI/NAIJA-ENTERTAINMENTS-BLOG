@@ -311,11 +311,31 @@ def download_instrumental(request, pk):
 
 def instrumental_post(request, pk):
     instrumental = get_object_or_404(Instrumental, pk=pk)
-    all_instrmentals = Instrumental.objects.all()
+    Trending_Beat = Instrumental.objects.filter(categories__name = 'Hot Instrumentals').order_by('-created_at')[:6]
+    Beat_of_the_week = Instrumental.objects.filter(categories__name = 'Beat OF The Week').order_by('-created_at').first()
+    comments = instrumental.instrumental_comments.all().order_by('-created_at')
+    Beat_paginator = Paginator(comments, 3)
+    comment_page_number = request.GET.get("comment_page")
+    comment_page = Beat_paginator.get_page(comment_page_number)
+    
+    form = Comment_Form()
+    if request.method == 'POST':
+        form = Comment_Form(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.instrumental = instrumental
+            comment.save()
+            return redirect('instrumental_details', pk=pk)
+        
+    
 
     context = {
         'instrumental': instrumental,
-        'all_instrmentals': all_instrmentals,
+        'Trending_Beat': Trending_Beat,
+        'Beat_of_the_week': Beat_of_the_week,
+        'form': form,
+        'comments': comments,
+        'comment_page': comment_page,
     }
 
     return render(request, 'blog/instrumental_detail.html', context)
@@ -383,4 +403,25 @@ class SearchVideo(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('search_video', '')
+        return context
+    
+class searchInstrumental(ListView):
+    model = 'Instrumental'
+    template_name = 'blog/instrumental_list.html'
+    context_object_name = 'results'
+    paginate_by = 10
+    
+    def get_queryset(self):
+        search = self.request.GET.get('search_instrumental', '')
+        if search:
+            return Instrumental.objects.filter(
+                Q(title__icontains=search) |
+                Q(producer_name__icontains=search) |
+                Q(genre__icontains=search)
+            ).distinct()
+        return Instrumental.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('search_instrumental', '')
         return context

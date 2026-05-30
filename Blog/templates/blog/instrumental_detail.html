@@ -1,12 +1,26 @@
 
 {% extends 'blog/base.html' %}
+{% load static %}
 
 {% block title %} {{ instrumental.title }} - {{ instrumental.producer_name }}{% endblock %}
+
+{% block meta %}
+  <meta property="og:title" content="{{ instrumental.title }} - {{ instrumental.producer_name }}">
+  <meta property="og:description" content="{{ instrumental.description|truncatechars:160 }}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:image" content="{% if instrumental.cover_image %}{{ instrumental.cover_image.url }}{% else %}{% static 'images/default-share.jpg' %}{% endif %}">
+  <meta property="og:site_name" content="NAIJA ENTERTAINMENT">
+  <meta property="og:type" content="music.song">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ instrumental.title }} - {{ instrumental.producer_name }}">
+  <meta name="twitter:description" content="{{ instrumental.description|truncatechars:160 }}">
+  <meta name="twitter:image" content="{% if instrumental.cover_image %}{{ instrumental.cover_image.url }}{% else %}{% static 'images/default-share.jpg' %}{% endif %}">
+{% endblock %}
 
 {% block content %}
 {% load cloudinary_ext %}
 <div class="search-container">
-    <form action="{% url 'search_music' %}" method="get" class="search-form">
+    <form action="{% url 'search_instrumental' %}" method="get" class="search-form">
       {% csrf_token %}
       <div class="search-wrapper">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -15,9 +29,9 @@
         </svg>
         <input 
           type="text" 
-          name="search" 
+          name="search_instrumental"
           class="search-input" 
-          placeholder="Search for music, artists, albums..." 
+          placeholder="Search for beats, producers, genres..." 
           autocomplete="off"
         >
         <button type="submit" class="search-btn">
@@ -119,7 +133,7 @@
 
                  {% comment %} COMMENTS SECTION {% endcomment %}
     <div class="comments">
-        <h2 style="margin-top: 50px;">Music <span>Comments ({{ comments.count }})</span></h2>
+        <h2 style="margin-top: 50px;">Instrumental <span>Comments ({{ comments.count }})</span></h2>
         
         {% for comment in comment_page %}
         <div class="comment">
@@ -192,19 +206,19 @@
      <div class="sidebar">
       
         <div class="container">
-            <h2 class="section-title">Song Of The <span>Week</span></h2>
+            <h2 class="section-title">Beat Of The <span>Week</span></h2>
             <div class="grid">
-              {% if song_of_the_week %}
-              <a href="{% url 'music_details' song_of_the_week.pk %}">
+              {% if Beat_of_the_week %}
+              <a href="{% url 'instrumental_details' Beat_of_the_week.pk %}">
                 <div class="card">
-                  <img src="{{ song_of_the_week.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ music.title }}" style="height: 200px;">
-                  <h3>{{ song_of_the_week.title }}</h3>
-                  <p>{{ song_of_the_week.artist|default:"Unknown Artist" }}</p>
-                  <span class="tag">{{ song_of_the_week.genre|default:"Uncategorized" }}</span>
+                  <img src="{{ Beat_of_the_week.cover_image.url }}" alt="{{ Beat_of_the_week.title }}" style="height: 200px;">
+                  <h3>{{ Beat_of_the_week.title }}</h3>
+                  <p>{{ Beat_of_the_week.producer_name|default:"Unknown Artist" }}</p>
+                  <span class="tag">{{ Beat_of_the_week.genre|default:"Uncategorized" }}</span>
                 </div>
               </a>
              {% else %}
-            <p>No song of the week selected.</p>
+            <p>No Beat of the week selected.</p>
             {% endif %}
             </div>
           </div>
@@ -212,16 +226,16 @@
 
           
         <div class="container" style="margin: 10px auto">
-            <h2 class="section-title">Trending <span>Music</span></h2>
+            <h2 class="section-title">Trending <span>Beat</span></h2>
             <div class="grid">
-                {% for items in trending_now %}
-                <a href="{% url 'music_details' items.pk %}">
-                <div class="card" style="margin-bottom: 10px;">
-                    <img src="{{ items.cover_image.url|default:'/static/placeholder.jpg' }}" alt="{{ items.title }}">
+                {% for items in Trending_Beat %}
+                <a href="{% url 'instrumental_details' items.pk %}">
+                  <div class="card">
+                    <img src="{{ items.cover_image.url }}" alt="{{ items.title }}">
                     <h3>{{ items.title }}</h3>
-                    <p>{{ items.artist|default:"Unknown Artist" }}</p>
+                    <p>{{ items.producer_name|default:"Unknown Artist" }}</p>
                     <span class="tag">{{ items.genre|default:"Uncategorized" }}</span>
-                </div>
+                  </div>
                 </a>
                 {% endfor %}
 

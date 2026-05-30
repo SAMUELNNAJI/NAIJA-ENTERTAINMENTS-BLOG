@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import SearchMusic
 from .views import SearchNews
-from .views import SearchVideo
+from .views import SearchVideo, searchInstrumental
 
 
 
@@ -25,6 +25,6 @@ urlpatterns = [
     path('search/', SearchMusic.as_view(), name='search_music'),
     path('search_news/', SearchNews.as_view(), name='search_news'),
     path('search_video/', SearchVideo.as_view(), name='search_video'),
-    
+    path('instrumental_search/', searchInstrumental.as_view(), name='search_instrumental'),
  
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
